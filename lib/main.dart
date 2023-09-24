@@ -12,6 +12,12 @@ class MyApp extends StatelessWidget{
     return MaterialApp(
       home: CounterScreenState(),
       title: "Counter App",
+      theme: ThemeData(
+        textTheme: TextTheme(
+          bodyLarge: TextStyle(fontSize: 39, fontWeight: FontWeight.bold),
+          bodyMedium: TextStyle(fontSize: 18),
+        ),
+      ),
     );
   }
 
@@ -30,6 +36,35 @@ class CounterScreenState extends StatefulWidget{
 class CounterScreenUI extends State<CounterScreenState>{
   int count = 0;
 
+  appAlertDialog(){
+    showDialog(context: context, builder: (context){
+      return AlertDialog(
+        content: Text("Button pressed $count times."),
+        actions: [
+          TextButton(onPressed: (){Navigator.pop(context);}, child: Text("Close"))
+        ],
+      );
+    });
+  }
+
+  void incrementOnClick(int value){
+    if(value > 3){
+      count++;
+      appAlertDialog();
+
+    }else{
+      count++;
+    }
+    setState(() {});
+  }
+
+  void decrementOnClick(int value){
+    if(value > 0){
+      count--;
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,10 +74,10 @@ class CounterScreenUI extends State<CounterScreenState>{
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("Count:", style: TextStyle(fontSize: 18),),
-          Text('$count', style: TextStyle(fontSize: 39, fontWeight: FontWeight.bold),),
-          SizedBox(height: 10,),
-          
+          Text("Count:", style: Theme.of(context).textTheme.bodyMedium,),
+          Text('$count', style: Theme.of(context).textTheme.bodyLarge,),
+          SizedBox(height: 10),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -52,31 +87,14 @@ class CounterScreenUI extends State<CounterScreenState>{
                 ),
                 child: ElevatedButton(
                     onPressed: (){
-                      if(count > 3){
-                        count++;
-                        showDialog(context: context, builder: (context){
-                          return AlertDialog(
-                           content: Text("Button pressed $count times."),
-                            actions: [
-                              TextButton(onPressed: (){Navigator.pop(context);}, child: Text("Close"))
-                            ],
-                          );
-                        });
-                        setState(() {});
-                      }else{
-                        count++;
-                        setState(() {});
-                      }
+                      incrementOnClick(count);
                     },
                     child: Icon(Icons.add)
                 ),
               ),
               ElevatedButton(
                   onPressed: (){
-                    if(count > 0){
-                      count--;
-                      setState(() {});
-                    }
+                    decrementOnClick(count);
                   },
                   child: Icon(Icons.remove)
               ),
